@@ -1,14 +1,12 @@
 import requests
 import json
+import csv
 
 # Dynatrace API base URL
 base_url = "https://<env>.live.dynatrace.com/api/v2"
 
 # Dynatrace API token
 api_token = "dt0c01.XXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-# List of hostnames
-hostnames = ["hostname1", "hostname2"]
 
 # Function to get the host ID for a given hostname
 def get_host_id(hostname):
@@ -27,7 +25,7 @@ def get_host_id(hostname):
     return None
 
 # Function to update the settings with host IDs
-# replace the `payload` with the payload of the Maintenance Winodw you are trying to modify
+# Replace the `payload` with the payload of the Maintenance Window you are trying to modify
 def update_settings(host_ids):
     url = f"{base_url}/settings/objects/{{replace_with_objectID_of_MW}}"
     headers = {
@@ -66,6 +64,22 @@ def update_settings(host_ids):
     else:
         print(f"Failed to update settings. Status code: {response.status_code}")
         print(response.text)
+
+# Read hostnames from CSV file
+def read_hostnames_from_csv(csv_file):
+    hostnames = []
+    with open(csv_file, 'r') as file:
+        csv_reader = csv.reader(file)
+        for row in csv_reader:
+            if len(row) > 0:
+                hostnames.append(row[0])
+    return hostnames
+
+# CSV file path
+csv_file = "hostnames.csv"
+
+# Get hostnames from CSV file
+hostnames = read_hostnames_from_csv(csv_file)
 
 # Get host IDs for all hostnames
 host_ids = []

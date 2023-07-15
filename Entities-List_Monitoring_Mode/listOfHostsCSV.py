@@ -1,3 +1,4 @@
+import csv
 import requests
 
 base_url = "https://<env>.live.dynatrace.com/api/v2"
@@ -56,10 +57,13 @@ def get_monitoring_modes(hosts):
 hosts = get_hosts()
 monitoring_modes = get_monitoring_modes(hosts)
 
-print("Hosts:")
-for host in hosts:
-    host_id, display_name, monitoring_mode = host
-    print(f"Host ID: {host_id}")
-    print(f"Display Name: {display_name}")
-    print(f"Monitoring Mode: {monitoring_mode}")
-    print()
+# Save output to a CSV file
+filename = "output.csv"
+with open(filename, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Host ID", "Display Name", "Monitoring Mode"])  # Write header
+    for host in hosts:
+        host_id, display_name, monitoring_mode = host
+        writer.writerow([host_id, display_name, monitoring_mode])
+
+print(f"Output saved to {filename}")
